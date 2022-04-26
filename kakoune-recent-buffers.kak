@@ -9,7 +9,7 @@ hook global WinDisplay .* %{
 
 define-command show-recent-buffers -override %{
   info  %sh{
-    res=$(paste -d' ' <(printf "j\nk\nl\n;") <(printf "$kak_opt_kakoune_recent_buffers" | tr ' ' '\n' | tac | tail -n +2))
+    res=$(paste -d' ' <(printf "j\nk\nl\n;") <(printf "$kak_opt_kakoune_recent_buffers" | tr ' ' '\n' | tac | tail -n +2 | head -4))
     printf "$res"
   }
   on-key %{
