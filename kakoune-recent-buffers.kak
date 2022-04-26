@@ -3,7 +3,7 @@ declare-option str-list kakoune_recent_buffers
 hook global WinDisplay .* %{
   set-option -add global kakoune_recent_buffers %reg{percent}
   set-option global kakoune_recent_buffers %sh{
-    echo $kak_opt_kakoune_recent_buffers | tr ' ' '\n' | tac | awk '!seen[$0]++' | tac | tr '\n' ' '
+    echo $kak_opt_kakoune_recent_buffers | tr ' ' '\n' | grep '^[^*]' | tac | awk '!seen[$0]++' | tac | tr '\n' ' '
   }
 }
 
