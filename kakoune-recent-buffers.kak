@@ -1,7 +1,9 @@
 declare-option str-list kakoune_recent_buffers
 
 hook global WinDisplay .* %{
-  set-option -add global kakoune_recent_buffers "'%reg{percent}'"
+  set-option -add global kakoune_recent_buffers %sh{
+    echo "%reg{percent}" | grep "^'.*'$" || echo "'%reg{percent}'"
+  }
   set-option global kakoune_recent_buffers %sh{
     echo "$kak_opt_kakoune_recent_buffers" | xargs printf "%s\n" | grep '^[^*]' | tac | awk '!seen[$0]++' | tac | xargs printf "'%s' "
   }
