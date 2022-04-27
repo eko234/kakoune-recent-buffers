@@ -1,10 +1,10 @@
 declare-option str-list recent_buffers
 
 hook global WinDisplay .* %{
-  set-option -add global recent_buffers %reg{percent}
+  # set-option -add global recent_buffers %reg{percent}
   evaluate-commands  %sh{
     res=$(echo "$kak_quoted_opt_recent_buffers" | xargs printf "'%s'\n" | grep "^'[^*]" | tac | awk '!seen[$0]++' | tac | xargs printf "'%s' ")
-    echo "set-option global recent_buffers $res"
+    echo "set-option global recent_buffers $kak_quoted_reg_percent $res"
   }
 }
 
