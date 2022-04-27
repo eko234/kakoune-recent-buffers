@@ -8,6 +8,13 @@ hook global WinDisplay .* %{
   }
 }
 
+hook global BufClose .* %{
+  evaluate-commands  %sh{
+    res=$(echo "$kak_quoted_opt_recent_buffers" | xargs printf "'%s'\n" | grep -v "$kak_bufname" | xargs printf "'%s' ")
+    echo "set-option global recent_buffers $res"
+  }
+}
+
 define-command show-recent-buffers -override %{
   info -style modal  %sh{
     res=$(paste -d' ' <(printf "j\nk\nl\n;") <(printf "$kak_quoted_opt_recent_buffers" | xargs printf "%s\n" | tac | tail -n +2 | head -4))
