@@ -8,12 +8,12 @@ hook global WinDisplay .* %{
 }
 
 define-command show-recent-buffers -override %{
-  info  %sh{
+  info -style modal  %sh{
     res=$(paste -d' ' <(printf "j\nk\nl\n;") <(printf "$kak_opt_kakoune_recent_buffers" | tr ' ' '\n' | tac | tail -n +2 | head -4))
     printf "$res"
   }
   on-key %{
-    info
+    info -style modal
     buffer %sh{
       [ "$kak_key" == "j" ]           && printf "$kak_opt_kakoune_recent_buffers" | tr ' ' '\n' | tac | tail -n +2 | sed "1q;d"
       [ "$kak_key" == "k" ]           && printf "$kak_opt_kakoune_recent_buffers" | tr ' ' '\n' | tac | tail -n +2 | sed "2q;d"
