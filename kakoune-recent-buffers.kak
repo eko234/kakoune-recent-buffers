@@ -1,6 +1,6 @@
 declare-option str-list recent_buffers
 
-define-command debuggy_buggy -hidden %{
+define-command _debuggy_buggy -hidden %{
   info %sh{
     echo "$kak_quoted_opt_recent_buffers" | xargs -r printf "'%s'\n"
   }
@@ -20,7 +20,7 @@ hook global BufClose .* %{
   }
 }
 
-define-command pick-link -override %{
+define-command recent-buffers-pick-link -override %{
   info -style modal  %sh{
     res=$(paste -d' ' <(printf "j\nk\nl\n;") <(printf "$kak_quoted_opt_recent_buffers" | xargs -r printf "%s\n" | tac | tail -n +2 | head -4))
     printf "$res"
@@ -36,13 +36,13 @@ define-command pick-link -override %{
   }
 }
 
-define-command pull-chain -override %{
+define-command recent-buffers-pull-chain -override %{
   buffer %sh{
     echo "$kak_quoted_opt_recent_buffers" | xargs -r printf "%s\n" | head -1
   }
 }
 
-define-command loose-chain -override %{
+define-command recent-buffers-loose-chain -override %{
   evaluate-commands %sh{
     last_=$(echo "$kak_quoted_opt_recent_buffers" | xargs -r printf "'%s'\n" | tail -1)
     init_=$(echo "$kak_quoted_opt_recent_buffers" | xargs -r printf "'%s'\n" | head -n -1 | xargs -r printf "'%s' ")
