@@ -22,7 +22,7 @@ hook global BufClose .* %{
 
 define-command pick-link -override %{
   info -style modal  %sh{
-    res=$(paste -d' ' <(printf "j\nk\nl\n;") <(printf "$kak_quoted_opt_recent_buffers" | xargs printf "%s\n" | tac | tail -n +2 | head -4))
+    res=$(paste -d' ' <(printf "j\nk\nl\n;") <(printf "$kak_quoted_opt_recent_buffers" | xargs -r printf "%s\n" | tac | tail -n +2 | head -4))
     printf "$res"
   }
   on-key %{
