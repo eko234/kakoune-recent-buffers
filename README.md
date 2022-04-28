@@ -25,7 +25,6 @@ plug "eko234/kakoune-recent-buffers" config %{
   declare-user-mode chain
   map global user l ": recent-buffers-pick-link<ret>" -docstring "recent buffers"
   map global user L ": enter-user-mode -lock chain<ret>" -docstring "chain mode"
-  map global chain b ': _debuggy_buggy<ret>'
   map global chain p ": recent-buffers-loose-chain<ret>" -docstring "loose"
   map global chain n ": recent-buffers-pull-chain<ret>" -docstring "pull"
 }
