@@ -60,8 +60,14 @@ define-command recent-buffers-freeze-buffer-impl -params 1 -override %{
 
 define-command recent-buffers-freeze-buffer -override %{
   info -style modal  %sh{
-    res=$(echo $kak_quoted_opt_recent_buffers_freezed | sed -E 's/<semicolon>/;/' | xargs printf "%s\n")
-    printf "$res\n"
+    targets=$(
+      echo $kak_quoted_opt_recent_buffers_freezed \
+      | xargs printf "%s\n" \
+      | grep "^j\|^k\|^l\|^<semicolon>" \
+      | sort \
+      | sed 's/<semicolon>/;/'
+    )
+    printf "$targets\n"
   }
   on-key %{
     info -style modal
@@ -71,8 +77,14 @@ define-command recent-buffers-freeze-buffer -override %{
 
 define-command recent-buffers-take-out-from-freezer -override %{
   info -style modal  %sh{
-    res=$(echo $kak_quoted_opt_recent_buffers_freezed | sed -E 's/<semicolon>/;/' | xargs printf "%s\n")
-    printf "$res\n"
+    targets=$(
+      echo $kak_quoted_opt_recent_buffers_freezed \
+      | xargs printf "%s\n" \
+      | grep "^j\|^k\|^l\|^<semicolon>" \
+      | sort \
+      | sed 's/<semicolon>/;/'
+    )
+    printf "$targets\n"
   }
   on-key %{
     info -style modal
