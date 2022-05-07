@@ -64,6 +64,7 @@ define-command recent-buffers-freeze-buffer -override %{
     printf "$res\n"
   }
   on-key %{
+    info -style modal
     recent-buffers-freeze-buffer-impl %val{key}
   }
 }
