@@ -77,7 +77,7 @@ define-command recent-buffers-take-out-from-freezer -override %{
     info -style modal
     evaluate-commands %sh{
       target=$(echo $kak_quoted_opt_recent_buffers_freezed | xargs printf "%s\n" | grep "^$kak_key")
-      iwillfixitipromise="$target" | sed -E 's/[^=]*=(.*)/\1/g'
+      iwillfixitipromise=$(echo "$target" | sed -E 's/[^=]*=(.*)/\1/g')
       echo "buffer $iwillfixitipromise"
     }
   }
