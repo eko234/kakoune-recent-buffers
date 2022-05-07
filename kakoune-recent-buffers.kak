@@ -59,6 +59,10 @@ define-command recent-buffers-freeze-buffer-impl -params 1 -override %{
 }
 
 define-command recent-buffers-freeze-buffer -override %{
+  info -style modal  %sh{
+    res=$(echo $kak_quoted_opt_recent_buffers_freezed | sed -E 's/<semicolon>/;/' | xargs printf "%s\n")
+    printf "$res\n"
+  }
   on-key %{
     recent-buffers-freeze-buffer-impl %val{key}
   }
@@ -71,13 +75,10 @@ define-command recent-buffers-take-out-from-freezer -override %{
   }
   on-key %{
     info -style modal
-    buffer %sh{
+    evaluate-commands %sh{
       target=$(echo $kak_quoted_opt_recent_buffers_freezed | xargs printf "%s\n" | grep "^$kak_key")
-      echo "$target" | sed -E 's/[^=]*=(.*)/\1/g'
+      iwillfixitipromise="$target" | sed -E 's/[^=]*=(.*)/\1/g'
+      echo "buffer $iwillfixitipromise"
     }
   }
-}
-
-define-command recent-buffers-freezer %{
-  recent-buffers-take-out-from-freezer
 }
