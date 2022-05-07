@@ -1,4 +1,5 @@
 declare-option str-list recent_buffers
+declare-option str-to-str-map recent_buffers_freezed
 
 define-command _debuggy_buggy -hidden %{
   info %sh{
@@ -48,5 +49,31 @@ define-command recent-buffers-loose-chain -override %{
     init_=$(echo "$kak_quoted_opt_recent_buffers" | xargs -r printf "'%s'\n" | head -n -1 | xargs -r printf "'%s' ")
     echo "set-option global recent_buffers $last_ $init_"
     echo "$init_" | xargs -r printf "'%s'\n" | tail -1 | xargs -r printf "buffer \"%s\""
+  }
+}
+
+define-command recent-buffers-freeze-buffer-impl -params 1 -override %{
+  evaluate-commands %sh{
+    printf "set-option -add global recent_buffers_freezed $1=$kak_reg_percent\n"
+  }
+}
+
+define-command recent-buffers-freeze-buffer -override %{
+  on-key %{
+    recent-buffers-freeze-buffer-impl %val{key}
+  }
+}
+
+define-command recent-buffers-take-out-from-freezer -override %{
+  info -style modal  %sh{
+    res=$(echo $kak_quoted_opt_recent_buffers_freezed | sed -E 's/<semicolon>/;/' | xargs printf "%s\n")
+    printf "$res\n"
+  }
+  on-key %{
+    info -style modal
+    buffer %sh{
+      target=$(echo $kak_quoted_opt_recent_buffers_freezed | xargs printf "%s\n" | grep "^$kak_key")
+      echo "$target" | sed -E 's/[^=]*=(.*)/\1/g'
+    }
   }
 }
