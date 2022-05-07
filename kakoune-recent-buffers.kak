@@ -77,3 +77,7 @@ define-command recent-buffers-take-out-from-freezer -override %{
     }
   }
 }
+
+define-command recent-buffers-freezer %{
+  recent-buffers-take-out-from-freezer
+}
