@@ -23,16 +23,17 @@ hook global BufClose .* %{
 
 define-command recent-buffers-pick-link -override %{
   info -style modal  %sh{
-    res=$(paste -d' ' <(printf "j\nk\nl\n;") <(printf "$kak_quoted_opt_recent_buffers" | xargs -r printf "%s\n" | tac | tail -n +2 | head -4))
+    # res=$(paste -d' ' <(printf "j\nk\nl\n;") <(printf "$kak_quoted_opt_recent_buffers" | xargs -r printf "%s\n" | tac | tail -n +2 | head -4))
+    res=$(printf "j\nk\nl\n;" | { printf "$kak_quoted_opt_recent_buffers" | xargs -r printf "%s\n" | tac | tail -n +2 | head -4 | { paste -d '|' /dev/fd/3 /dev/fd/4; } 4>&0; } 3>&0)
     printf "$res"
   }
   on-key %{
     info -style modal
     buffer %sh{
-      [ "$kak_key" == "j" ]           && printf "$kak_quoted_opt_recent_buffers" | xargs -r printf "%s\n" | tac | tail -n +2 | sed "1q;d"
-      [ "$kak_key" == "k" ]           && printf "$kak_quoted_opt_recent_buffers" | xargs -r printf "%s\n" | tac | tail -n +2 | sed "2q;d"
-      [ "$kak_key" == "l" ]           && printf "$kak_quoted_opt_recent_buffers" | xargs -r printf "%s\n" | tac | tail -n +2 | sed "3q;d"
-      [ "$kak_key" == "<semicolon>" ] && printf "$kak_quoted_opt_recent_buffers" | xargs -r printf "%s\n" | tac | tail -n +2 | sed "4q;d"
+      [ "$kak_key" = "j" ]           && printf "$kak_quoted_opt_recent_buffers" | xargs -r printf "%s\n" | tac | tail -n +2 | sed "1q;d"
+      [ "$kak_key" = "k" ]           && printf "$kak_quoted_opt_recent_buffers" | xargs -r printf "%s\n" | tac | tail -n +2 | sed "2q;d"
+      [ "$kak_key" = "l" ]           && printf "$kak_quoted_opt_recent_buffers" | xargs -r printf "%s\n" | tac | tail -n +2 | sed "3q;d"
+      [ "$kak_key" = "<semicolon>" ] && printf "$kak_quoted_opt_recent_buffers" | xargs -r printf "%s\n" | tac | tail -n +2 | sed "4q;d"
     }
   }
 }
