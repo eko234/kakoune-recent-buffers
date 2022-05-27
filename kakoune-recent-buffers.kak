@@ -24,7 +24,7 @@ hook global BufClose .* %{
 define-command recent-buffers-pick-link -override %{
   info -style modal  %sh{
     # res=$(paste -d' ' <(printf "j\nk\nl\n;") <(printf "$kak_quoted_opt_recent_buffers" | xargs -r printf "%s\n" | tac | tail -n +2 | head -4))
-    res=$(printf "j\nk\nl\n;" | { printf "$kak_quoted_opt_recent_buffers" | xargs -r printf "%s\n" | tac | tail -n +2 | head -4 | { paste -d '|' /dev/fd/3 /dev/fd/4; } 4>&0; } 3>&0)
+    res=$(printf "j\nk\nl\n;" | { printf "$kak_quoted_opt_recent_buffers" | xargs -r printf "%s\n" | tac | tail -n +2 | head -4 | { paste -d ' ' /dev/fd/3 /dev/fd/4; } 4>&0; } 3>&0)
     printf "$res"
   }
   on-key %{
