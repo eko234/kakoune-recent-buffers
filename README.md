@@ -19,6 +19,11 @@ to navigate between them seamlessly.
 It will omit buffers with earbuds, works correctly with files that include spaces and
 removes entries when buffers are closed.
 
+It also supports freezing the current buffer chain, think of it like vim's harpoon, only that the files you are
+interested in are the ones you recently where in, when you freeze it, you can navigate in that chain
+without it updating like in the "normal" mode, you can access this frozen chain with `recent-buffers-freezed-pick-link`,
+both the normal and the frozen promt now tell you that pressing f will freeze the current chain.
+
 ## Suggested mappings
 ``` kakoune
 plug "eko234/kakoune-recent-buffers" config %{
