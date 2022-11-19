@@ -1,5 +1,5 @@
 declare-option str-list recent_buffers
-declare-option str-to-str-map recent_buffers_freezed
+declare-option str-list recent_buffers_freezed
 
 define-command _debuggy_buggy -hidden %{
   info %sh{
@@ -18,12 +18,35 @@ hook global BufClose .* %{
   evaluate-commands  %sh{
     res=$(echo "$kak_quoted_opt_recent_buffers" | xargs -r printf "'%s'\n" | grep -v "$kak_bufname" | xargs -r printf "'%s' " )
     echo "set-option global recent_buffers $res"
+    res=$(echo "$kak_quoted_opt_recent_buffers_freezed" | xargs -r printf "'%s'\n" | grep -v "$kak_bufname" | xargs -r printf "'%s' " )
+    echo "set-option global recent_buffers_freezed $res"
+  }
+}
+
+define-command recent-buffers-freeze %{
+  set-option global recent_buffers_freezed %opt[recent_buffers]
+}
+
+define-command recent-buffers-freezed-pick-link -override %{
+  info -style modal  %sh{
+  # res=$(paste -d' ' <(printf "j\nk\nl\n;") <(printf "$kak_quoted_opt_recent_buffers_freezed" | xargs -r printf "%s\n" | tac | tail -n +2 | head -4))
+    res=$(printf "j\nk\nl\n;" | { printf "$kak_quoted_opt_recent_buffers_freezed" | xargs -r printf "%s\n" | tac | tail -n +2 | head -4 | { paste -d ' ' /dev/fd/3 /dev/fd/4; } 4>&0; } 3>&0)
+    printf "$res"
+  }
+  on-key %{
+    info -style modal
+    buffer %sh{
+      [ "$kak_key" = "j" ]           && printf "$kak_quoted_opt_recent_buffers_freezed" | xargs -r printf "%s\n" | tac | tail -n +2 | sed "1q;d"
+      [ "$kak_key" = "k" ]           && printf "$kak_quoted_opt_recent_buffers_freezed" | xargs -r printf "%s\n" | tac | tail -n +2 | sed "2q;d"
+      [ "$kak_key" = "l" ]           && printf "$kak_quoted_opt_recent_buffers_freezed" | xargs -r printf "%s\n" | tac | tail -n +2 | sed "3q;d"
+      [ "$kak_key" = "<semicolon>" ] && printf "$kak_quoted_opt_recent_buffers_freezed" | xargs -r printf "%s\n" | tac | tail -n +2 | sed "4q;d"
+    }
   }
 }
 
 define-command recent-buffers-pick-link -override %{
   info -style modal  %sh{
-    # res=$(paste -d' ' <(printf "j\nk\nl\n;") <(printf "$kak_quoted_opt_recent_buffers" | xargs -r printf "%s\n" | tac | tail -n +2 | head -4))
+  # res=$(paste -d' ' <(printf "j\nk\nl\n;") <(printf "$kak_quoted_opt_recent_buffers" | xargs -r printf "%s\n" | tac | tail -n +2 | head -4))
     res=$(printf "j\nk\nl\n;" | { printf "$kak_quoted_opt_recent_buffers" | xargs -r printf "%s\n" | tac | tail -n +2 | head -4 | { paste -d ' ' /dev/fd/3 /dev/fd/4; } 4>&0; } 3>&0)
     printf "$res"
   }
